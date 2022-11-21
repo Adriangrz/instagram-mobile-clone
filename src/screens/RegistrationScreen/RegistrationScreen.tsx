@@ -15,6 +15,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Button from '../../components/typography/Button';
 import { supaBaseclient } from '../../utilities/supabaseClient';
+import FormInput from '../../components/typography/FormInput';
 
 type Props = {
   navigation: any;
@@ -44,6 +45,7 @@ const RegistrationScreen = ({ navigation }: Props) => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validation),
+    mode: 'onChange',
     defaultValues: {
       email: '',
       password: '',
@@ -56,7 +58,6 @@ const RegistrationScreen = ({ navigation }: Props) => {
       email: values.email,
       password: values.password,
     });
-    console.log(response);
   }, []);
 
   return (
@@ -73,81 +74,50 @@ const RegistrationScreen = ({ navigation }: Props) => {
         <View style={styles.inner}>
           <Header variant="h1">Register</Header>
           <View style={styles.row}>
-            <Controller
+            <FormInput
               control={control}
               name="email"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  style={styles.input}
-                  ref={ref_emailInput}
-                  onSubmitEditing={() => {
-                    setTimeout(() => {
-                      if (ref_passwordInput.current) {
-                        ref_passwordInput.current.focus();
-                      }
-                    }, 1000);
-                  }}
-                  autoCapitalize="words"
-                  autoCorrect={false}
-                  blurOnSubmit={false}
-                  returnKeyType="next"
-                  placeholder="email"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                />
-              )}
+              text="email"
+              secureTextEntry={false}
+              returnKeyType="next"
+              innerRef={ref_emailInput}
+              onSubmitEditing={() => {
+                setTimeout(() => {
+                  if (ref_passwordInput.current) {
+                    ref_passwordInput.current.focus();
+                  }
+                }, 1000);
+              }}
             />
             {errors.email && <Text style={styles.error}>{errors.email.message}</Text>}
           </View>
           <View style={styles.row}>
-            <Controller
+            <FormInput
               control={control}
               name="password"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  style={styles.input}
-                  ref={ref_passwordInput}
-                  onSubmitEditing={() => {
-                    setTimeout(() => {
-                      if (ref_passwordConfirmationInput.current) {
-                        ref_passwordConfirmationInput.current.focus();
-                      }
-                    }, 1000);
-                  }}
-                  autoCapitalize="words"
-                  autoCorrect={false}
-                  blurOnSubmit={false}
-                  returnKeyType="next"
-                  placeholder="password"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  secureTextEntry={true}
-                />
-              )}
+              text="password"
+              secureTextEntry={true}
+              returnKeyType="next"
+              innerRef={ref_passwordInput}
+              onSubmitEditing={() => {
+                setTimeout(() => {
+                  if (ref_passwordConfirmationInput.current) {
+                    ref_passwordConfirmationInput.current.focus();
+                  }
+                }, 1000);
+              }}
             />
             {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
           </View>
           <View style={styles.row}>
-            <Controller
+            <FormInput
               control={control}
               name="passwordConfirmation"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  style={styles.input}
-                  ref={ref_passwordConfirmationInput}
-                  autoCapitalize="words"
-                  autoCorrect={false}
-                  returnKeyType="done"
-                  placeholder="confirm password"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  secureTextEntry={true}
-                  onSubmitEditing={handleSubmit(onSubmit)}
-                />
-              )}
+              text="confirm password"
+              secureTextEntry={true}
+              returnKeyType="done"
+              innerRef={ref_passwordConfirmationInput}
+              onSubmitEditing={handleSubmit(onSubmit)}
             />
             {errors.passwordConfirmation && (
               <Text style={styles.error}>{errors.passwordConfirmation.message}</Text>
