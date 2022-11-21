@@ -12,7 +12,7 @@ const IntroductionScreen = ({ navigation }: Props) => {
   return (
     <View style={styles.container}>
       <Header variant="h1">Welcome</Header>
-      <Button onPress={() => console.log('press')}>Start your journey</Button>
+      <Button onPress={() => navigation.navigate('Registration')}>Start your journey</Button>
     </View>
   );
 };
