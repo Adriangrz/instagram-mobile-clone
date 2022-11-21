@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -34,6 +34,7 @@ const RegistrationScreen = ({ navigation }: Props) => {
   const ref_emailInput = useRef<TextInput>(null);
   const ref_passwordInput = useRef<TextInput>(null);
   const ref_passwordConfirmationInput = useRef<TextInput>(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     ref_emailInput.current?.focus();
@@ -54,10 +55,20 @@ const RegistrationScreen = ({ navigation }: Props) => {
   });
 
   const onSubmit = useCallback(async (values: any) => {
-    const response = await supaBaseclient.auth.signUp({
-      email: values.email,
-      password: values.password,
-    });
+    try {
+      const response = await supaBaseclient.auth.signUp({
+        email: values.email,
+        password: values.password,
+      });
+      if (response.data && response.data.session?.access_token) {
+        setError('');
+        //navigation.navigate();
+        return;
+      }
+      setError('Registration failed');
+    } catch (error) {
+      setError('Register went wrong');
+    }
   }, []);
 
   return (
@@ -73,6 +84,7 @@ const RegistrationScreen = ({ navigation }: Props) => {
       >
         <View style={styles.inner}>
           <Header variant="h1">Register</Header>
+          {error && <Text style={styles.error}>{error}</Text>}
           <View style={styles.row}>
             <FormInput
               control={control}
