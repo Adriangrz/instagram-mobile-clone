@@ -7,6 +7,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   TextInput,
+  SafeAreaView,
+  StatusBar,
 } from 'react-native';
 import styles from './styles';
 import Header from '../../../components/typography/Header';
@@ -16,6 +18,7 @@ import * as yup from 'yup';
 import Button from '../../../components/typography/Button';
 import { supaBaseclient } from '../../../utilities/supabaseClient';
 import FormInput from '../../../components/typography/FormInput';
+import { useHeaderHeight } from '@react-navigation/elements';
 
 type Props = {
   navigation: any;
@@ -31,6 +34,7 @@ const validation = yup.object().shape({
 });
 
 const RegistrationScreen = ({ navigation }: Props) => {
+  const headerHeight = useHeaderHeight();
   const ref_emailInput = useRef<TextInput>(null);
   const ref_passwordInput = useRef<TextInput>(null);
   const ref_passwordConfirmationInput = useRef<TextInput>(null);
@@ -72,75 +76,77 @@ const RegistrationScreen = ({ navigation }: Props) => {
   }, []);
 
   return (
-    <TouchableWithoutFeedback
-      style={styles.container}
-      onPress={() => {
-        Keyboard.dismiss();
-      }}
-    >
+    <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}
+        keyboardVerticalOffset={headerHeight}
       >
-        <View style={styles.inner}>
-          <Header variant="h1">Register</Header>
-          {error && <Text style={styles.error}>{error}</Text>}
-          <View style={styles.row}>
-            <FormInput
-              control={control}
-              name="email"
-              text="email"
-              secureTextEntry={false}
-              returnKeyType="next"
-              innerRef={ref_emailInput}
-              onSubmitEditing={() => {
-                setTimeout(() => {
-                  if (ref_passwordInput.current) {
-                    ref_passwordInput.current.focus();
-                  }
-                }, 1000);
-              }}
-            />
-            {errors.email && <Text style={styles.error}>{errors.email.message}</Text>}
+        <TouchableWithoutFeedback
+          onPress={() => {
+            Keyboard.dismiss();
+          }}
+        >
+          <View style={styles.inner}>
+            <Header variant="h1">Register</Header>
+            {error && <Text style={styles.error}>{error}</Text>}
+            <View style={styles.row}>
+              <FormInput
+                control={control}
+                name="email"
+                text="email"
+                secureTextEntry={false}
+                returnKeyType="next"
+                innerRef={ref_emailInput}
+                onSubmitEditing={() => {
+                  setTimeout(() => {
+                    if (ref_passwordInput.current) {
+                      ref_passwordInput.current.focus();
+                    }
+                  }, 1000);
+                }}
+              />
+              {errors.email && <Text style={styles.error}>{errors.email.message}</Text>}
+            </View>
+            <View style={styles.row}>
+              <FormInput
+                control={control}
+                name="password"
+                text="password"
+                secureTextEntry={true}
+                returnKeyType="next"
+                innerRef={ref_passwordInput}
+                onSubmitEditing={() => {
+                  setTimeout(() => {
+                    if (ref_passwordConfirmationInput.current) {
+                      ref_passwordConfirmationInput.current.focus();
+                    }
+                  }, 1000);
+                }}
+              />
+              {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
+            </View>
+            <View style={styles.row}>
+              <FormInput
+                control={control}
+                name="passwordConfirmation"
+                text="confirm password"
+                secureTextEntry={true}
+                returnKeyType="done"
+                innerRef={ref_passwordConfirmationInput}
+                onSubmitEditing={handleSubmit(onSubmit)}
+              />
+              {errors.passwordConfirmation && (
+                <Text style={styles.error}>{errors.passwordConfirmation.message}</Text>
+              )}
+            </View>
+            <View style={styles.row}>
+              <Button onPress={handleSubmit(onSubmit)}>Register</Button>
+            </View>
           </View>
-          <View style={styles.row}>
-            <FormInput
-              control={control}
-              name="password"
-              text="password"
-              secureTextEntry={true}
-              returnKeyType="next"
-              innerRef={ref_passwordInput}
-              onSubmitEditing={() => {
-                setTimeout(() => {
-                  if (ref_passwordConfirmationInput.current) {
-                    ref_passwordConfirmationInput.current.focus();
-                  }
-                }, 1000);
-              }}
-            />
-            {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
-          </View>
-          <View style={styles.row}>
-            <FormInput
-              control={control}
-              name="passwordConfirmation"
-              text="confirm password"
-              secureTextEntry={true}
-              returnKeyType="done"
-              innerRef={ref_passwordConfirmationInput}
-              onSubmitEditing={handleSubmit(onSubmit)}
-            />
-            {errors.passwordConfirmation && (
-              <Text style={styles.error}>{errors.passwordConfirmation.message}</Text>
-            )}
-          </View>
-          <View style={styles.row}>
-            <Button onPress={handleSubmit(onSubmit)}>Register</Button>
-          </View>
-        </View>
+        </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+    </SafeAreaView>
   );
 };
 
