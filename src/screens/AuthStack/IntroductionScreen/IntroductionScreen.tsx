@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
-import Button from '../../components/typography/Button';
-import Header from '../../components/typography/Header';
+import Button from '../../../components/typography/Button';
+import Header from '../../../components/typography/Header';
 import styles from './styles';
 
 type Props = {

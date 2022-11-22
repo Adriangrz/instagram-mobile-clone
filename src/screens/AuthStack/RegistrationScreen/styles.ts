@@ -18,13 +18,6 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     textAlign: 'center',
   },
-  input: {
-    borderWidth: 1,
-    borderRadius: 15,
-    padding: 10,
-    alignSelf: 'stretch',
-    margin: 10,
-  },
 });
 
 export default styles;

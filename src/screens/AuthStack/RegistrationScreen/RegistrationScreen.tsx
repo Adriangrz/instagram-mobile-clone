@@ -9,13 +9,13 @@ import {
   TextInput,
 } from 'react-native';
 import styles from './styles';
-import Header from '../../components/typography/Header';
+import Header from '../../../components/typography/Header';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import Button from '../../components/typography/Button';
-import { supaBaseclient } from '../../utilities/supabaseClient';
-import FormInput from '../../components/typography/FormInput';
+import Button from '../../../components/typography/Button';
+import { supaBaseclient } from '../../../utilities/supabaseClient';
+import FormInput from '../../../components/typography/FormInput';
 
 type Props = {
   navigation: any;
@@ -62,7 +62,7 @@ const RegistrationScreen = ({ navigation }: Props) => {
       });
       if (response.data && response.data.session?.access_token) {
         setError('');
-        //navigation.navigate();
+        //navigation.navigate('Login');
         return;
       }
       setError('Registration failed');
