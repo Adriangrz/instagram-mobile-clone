@@ -8,7 +8,6 @@ import {
   Platform,
   TextInput,
   SafeAreaView,
-  StatusBar,
 } from 'react-native';
 import styles from './styles';
 import Header from '../../../components/typography/Header';
@@ -18,7 +17,7 @@ import * as yup from 'yup';
 import Button from '../../../components/typography/Button';
 import { supaBaseclient } from '../../../utilities/supabaseClient';
 import FormInput from '../../../components/typography/FormInput';
-import { useHeaderHeight } from '@react-navigation/elements';
+import theme from '../../../theme';
 
 type Props = {
   navigation: any;
@@ -27,17 +26,11 @@ type Props = {
 const validation = yup.object().shape({
   email: yup.string().email().required('email is required'),
   password: yup.string().required('password is required'),
-  passwordConfirmation: yup
-    .string()
-    .required('password confirmation is required')
-    .oneOf([yup.ref('password'), null], 'passwords must match'),
 });
 
-const RegistrationScreen = ({ navigation }: Props) => {
-  const headerHeight = useHeaderHeight();
+const LoginScreen = ({ navigation }: Props) => {
   const ref_emailInput = useRef<TextInput>(null);
   const ref_passwordInput = useRef<TextInput>(null);
-  const ref_passwordConfirmationInput = useRef<TextInput>(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -54,41 +47,39 @@ const RegistrationScreen = ({ navigation }: Props) => {
     defaultValues: {
       email: '',
       password: '',
-      passwordConfirmation: '',
     },
   });
 
   const onSubmit = useCallback(async (values: any) => {
     try {
-      const response = await supaBaseclient.auth.signUp({
+      const response = await supaBaseclient.auth.signInWithPassword({
         email: values.email,
         password: values.password,
       });
       if (response.data && response.data.session?.access_token) {
         setError('');
-        navigation.navigate('Login');
+        //navigation.navigate();
         return;
       }
-      setError('Registration failed');
+      setError('Invalid email or password');
     } catch (error) {
-      setError('Register went wrong');
+      setError('Login went wrong');
     }
   }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}
-        keyboardVerticalOffset={headerHeight}
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+        }}
       >
-        <TouchableWithoutFeedback
-          onPress={() => {
-            Keyboard.dismiss();
-          }}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.container}
         >
           <View style={styles.inner}>
-            <Header variant="h1">Register</Header>
+            <Header variant="h1">Login</Header>
             {error && <Text style={styles.error}>{error}</Text>}
             <View style={styles.row}>
               <FormInput
@@ -114,40 +105,28 @@ const RegistrationScreen = ({ navigation }: Props) => {
                 name="password"
                 text="password"
                 secureTextEntry={true}
-                returnKeyType="next"
+                returnKeyType="done"
                 innerRef={ref_passwordInput}
-                onSubmitEditing={() => {
-                  setTimeout(() => {
-                    if (ref_passwordConfirmationInput.current) {
-                      ref_passwordConfirmationInput.current.focus();
-                    }
-                  }, 1000);
-                }}
+                onSubmitEditing={handleSubmit(onSubmit)}
               />
               {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
             </View>
             <View style={styles.row}>
-              <FormInput
-                control={control}
-                name="passwordConfirmation"
-                text="confirm password"
-                secureTextEntry={true}
-                returnKeyType="done"
-                innerRef={ref_passwordConfirmationInput}
-                onSubmitEditing={handleSubmit(onSubmit)}
-              />
-              {errors.passwordConfirmation && (
-                <Text style={styles.error}>{errors.passwordConfirmation.message}</Text>
-              )}
+              <Button onPress={handleSubmit(onSubmit)}>Login</Button>
             </View>
             <View style={styles.row}>
-              <Button onPress={handleSubmit(onSubmit)}>Register</Button>
+              <Button
+                backgroundColor={theme.colors.secondary}
+                onPress={() => navigation.navigate('Registration')}
+              >
+                Sign up
+              </Button>
             </View>
           </View>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 };
 
-export default RegistrationScreen;
+export default LoginScreen;
