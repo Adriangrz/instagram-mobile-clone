@@ -18,6 +18,8 @@ import Button from '../../../components/typography/Button';
 import { supaBaseclient } from '../../../utilities/supabaseClient';
 import FormInput from '../../../components/typography/FormInput';
 import theme from '../../../theme';
+import useAuth from '../../../contexts';
+import { storeItemInSecureStore } from '../../../utilities/secureStorage';
 
 type Props = {
   navigation: any;
@@ -29,6 +31,8 @@ const validation = yup.object().shape({
 });
 
 const LoginScreen = ({ navigation }: Props) => {
+  const { setCredentials } = useAuth();
+
   const ref_emailInput = useRef<TextInput>(null);
   const ref_passwordInput = useRef<TextInput>(null);
   const [error, setError] = useState('');
@@ -58,7 +62,7 @@ const LoginScreen = ({ navigation }: Props) => {
       });
       if (response.data && response.data.session?.access_token) {
         setError('');
-        //navigation.navigate();
+        setCredentials(response.data.session.access_token);
         return;
       }
       setError('Invalid email or password');

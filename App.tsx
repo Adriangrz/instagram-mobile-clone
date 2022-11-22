@@ -1,6 +1,11 @@
 import React from 'react';
+import { AuthContextProvider } from './src/contexts/AuthContext';
 import { RootNavigator } from './src/screens/RootNavigator';
 
 export default function App() {
-  return <RootNavigator />;
+  return (
+    <AuthContextProvider>
+      <RootNavigator />
+    </AuthContextProvider>
+  );
 }

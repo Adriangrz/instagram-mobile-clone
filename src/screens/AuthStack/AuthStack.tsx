@@ -8,10 +8,12 @@ import Introduction from './IntroductionScreen';
 
 const Stack = createStackNavigator();
 
-export const AuthStack = () => (
+const AuthStack = () => (
   <Stack.Navigator>
     <Stack.Screen name="Introduction" component={Introduction} options={{ headerShown: false }} />
     <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
     <Stack.Screen name="Registration" component={Registration} options={{ headerTitle: '' }} />
   </Stack.Navigator>
 );
+
+export default AuthStack;
