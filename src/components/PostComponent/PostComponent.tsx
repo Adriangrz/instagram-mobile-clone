@@ -21,7 +21,7 @@ const PostComponent = ({ id, description, imageUrl }: PostType) => {
   });
 
   return (
-    <View style={styles.imageContainer}>
+    <View style={styles.postContainer}>
       <Header variant="h5">{description}</Header>
       <Image
         style={styles.image}
