@@ -80,7 +80,7 @@ const RegistrationScreen = ({ navigation }: Props) => {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}
-        keyboardVerticalOffset={headerHeight}
+        keyboardVerticalOffset={headerHeight + StatusBar.currentHeight!}
       >
         <TouchableWithoutFeedback
           onPress={() => {

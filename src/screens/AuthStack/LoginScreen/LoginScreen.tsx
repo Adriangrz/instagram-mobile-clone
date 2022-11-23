@@ -8,6 +8,7 @@ import {
   Platform,
   TextInput,
   SafeAreaView,
+  StatusBar,
 } from 'react-native';
 import styles from './styles';
 import Header from '../../../components/typography/Header';
@@ -72,7 +73,7 @@ const LoginScreen = ({ navigation }: Props) => {
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, paddingTop: StatusBar.currentHeight }}>
       <TouchableWithoutFeedback
         onPress={() => {
           Keyboard.dismiss();
