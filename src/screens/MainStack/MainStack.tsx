@@ -1,12 +1,12 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import PostsDashboardScreen from './PostsDashboardScreen';
+import PostsStack from './PostsStack';
 
 const Tab = createBottomTabNavigator();
 
 const MainStack = () => (
   <Tab.Navigator>
-    <Tab.Screen name="Posts" component={PostsDashboardScreen} options={{ headerShown: false }} />
+    <Tab.Screen name="Posts" component={PostsStack} options={{ headerShown: false }} />
   </Tab.Navigator>
 );
 
