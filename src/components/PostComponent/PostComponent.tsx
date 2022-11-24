@@ -14,6 +14,21 @@ const PostComponent = ({ id, description, imageUrl }: PostType) => {
   const getLike = async (id: string) =>
     await supaBaseclient.from('likes').select('*', { count: 'exact' }).eq('post_id', id);
 
+  const getLastComment = async (id: string) =>
+    await supaBaseclient
+      .from('comments')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .eq('post_id', id)
+      .limit(1)
+      .single();
+
+  const getLastCommentQuery = useQuery({
+    queryKey: ['posts', id, 'lastComment'],
+    queryFn: () => getLastComment(id),
+    enabled: !!id,
+  });
+
   const { data } = useQuery({
     queryKey: ['posts', id, 'like'],
     queryFn: () => getLike(id),
@@ -31,7 +46,9 @@ const PostComponent = ({ id, description, imageUrl }: PostType) => {
       />
       <View>
         <Paragraph>{data?.count} Likes</Paragraph>
-        <Paragraph>Somebody: XDXDXDXDXD</Paragraph>
+        {getLastCommentQuery.data?.data ? (
+          <Paragraph>Somebody: {getLastCommentQuery.data.data.body}</Paragraph>
+        ) : null}
       </View>
     </View>
   );
