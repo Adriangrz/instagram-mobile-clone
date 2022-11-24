@@ -6,8 +6,13 @@ import styles from './styles';
 type Props = {
   children: React.ReactNode;
   color?: string;
+  numberOfLines?: number;
 };
 
-export default function Paragraph({ children, color = '#070B11' }: Props) {
-  return <Text style={[styles.textParagraph, { color }]}>{children}</Text>;
+export default function Paragraph({ children, numberOfLines, color = '#070B11' }: Props) {
+  return (
+    <Text numberOfLines={numberOfLines} style={[styles.textParagraph, { color }]}>
+      {children}
+    </Text>
+  );
 }

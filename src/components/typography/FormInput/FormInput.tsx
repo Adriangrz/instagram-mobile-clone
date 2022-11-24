@@ -4,7 +4,7 @@ import { useController, UseControllerProps } from 'react-hook-form';
 import styles from './styles';
 
 type Props = UseControllerProps<any> & {
-  innerRef: any;
+  innerRef?: any;
   onSubmitEditing: any;
   text: string;
   secureTextEntry: boolean;
